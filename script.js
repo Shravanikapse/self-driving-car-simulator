@@ -14,6 +14,13 @@ const ctx = canvas.getContext("2d");
 canvas.width = 200;
 canvas.height = 400;
 
+// Initialize the road at the center of the canvas with a width of 150px
+const road = new Road(canvas.width / 2, 150);
+
+// Initialize the car centered on the road horizontally (canvas.width / 2)
+// and positioned near the bottom vertically (300px), with a width of 30px and height of 50px
+const car = new Car(canvas.width / 2, 300, 30, 50);
+
 /**
  * Main animation / physics loop
  * This function will run at ~60fps using requestAnimationFrame.
@@ -22,8 +29,11 @@ function animate() {
     // Clear the canvas on each frame to redraw objects in their updated positions
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // [FUTURE STATE] Draw road here
-    // [FUTURE STATE] Update and draw car here
+    // Draw the road
+    road.draw(ctx);
+
+    // Draw the car on the road
+    car.draw(ctx);
 
     // Request the next animation frame
     requestAnimationFrame(animate);
