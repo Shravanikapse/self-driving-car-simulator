@@ -26,13 +26,14 @@ const car = new Car(canvas.width / 2, 300, 30, 50);
  * This function will run at ~60fps using requestAnimationFrame.
  */
 function animate() {
-    // Clear the canvas on each frame to redraw objects in their updated positions
+    // 1. Update positions / physics
+    car.update();
+
+    // 2. Clear the canvas on each frame to redraw objects
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw the road
+    // 3. Draw updated elements
     road.draw(ctx);
-
-    // Draw the car on the road
     car.draw(ctx);
 
     // Request the next animation frame
