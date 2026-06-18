@@ -15,7 +15,7 @@ canvas.width = 200;
 canvas.height = 400;
 
 // Initialize the road at the center of the canvas with a width of 150px
-const road = new Road(canvas.width / 2, 150);
+const road = new Road(canvas.width / 2, 200);
 
 // Initialize the car centered on the road horizontally (canvas.width / 2)
 // and positioned near the bottom vertically (300px), with a width of 30px and height of 50px
