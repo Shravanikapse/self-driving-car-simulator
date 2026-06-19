@@ -26,14 +26,36 @@
                 <canvas id="carCanvas"></canvas>
             </div>
 
-            <!-- Future dashboard/controls panel placeholder -->
+            <!-- Dashboard/controls panel -->
             <div class="controls-panel" id="controlsPanel">
                 <div class="panel-header">
-                    <h2>Simulator Info</h2>
+                    <h2>Telemetry & Physics</h2>
                 </div>
-                <div class="panel-body">
-                    <p class="placeholder-text">Canvas is initialized and ready for development. Control configurations,
-                        neural net visualizer, and physics stats will appear here.</p>
+                <div class="panel-body stats-container">
+                    <div class="stat-card">
+                        <span class="stat-label">Speed</span>
+                        <span class="stat-value" id="speedVal">0.00</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Engine Force</span>
+                        <span class="stat-value" id="engineVal">0.00</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Rolling Friction</span>
+                        <span class="stat-value" id="frictionVal">0.00</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Air Drag</span>
+                        <span class="stat-value" id="dragVal">0.00</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Net Accel</span>
+                        <span class="stat-value" id="accelVal">0.00</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Steering Angle</span>
+                        <span class="stat-value" id="angleVal">0.0°</span>
+                    </div>
                 </div>
             </div>
         </main>

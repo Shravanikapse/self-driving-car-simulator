@@ -21,6 +21,14 @@ const road = new Road(canvas.width / 2, 200);
 // and positioned near the bottom vertically (300px), with a width of 30px and height of 50px
 const car = new Car(canvas.width / 2, 300, 30, 50);
 
+// Get telemetry DOM elements
+const speedVal = document.getElementById("speedVal");
+const engineVal = document.getElementById("engineVal");
+const frictionVal = document.getElementById("frictionVal");
+const dragVal = document.getElementById("dragVal");
+const accelVal = document.getElementById("accelVal");
+const angleVal = document.getElementById("angleVal");
+
 /**
  * Main animation / physics loop
  * This function will run at ~60fps using requestAnimationFrame.
@@ -29,10 +37,21 @@ function animate() {
     // 1. Update positions / physics
     car.update();
 
-    // 2. Clear the canvas on each frame to redraw objects
+    // 2. Update telemetry dashboard
+    if (speedVal) speedVal.textContent = car.speed.toFixed(2);
+    if (engineVal) engineVal.textContent = car.currentEngineForce.toFixed(2);
+    if (frictionVal) frictionVal.textContent = (-car.currentFriction).toFixed(2);
+    if (dragVal) dragVal.textContent = (-car.currentDrag).toFixed(2);
+    if (accelVal) accelVal.textContent = car.currentAccel.toFixed(2);
+    
+    // Normalize display angle: steered right is positive, steered left is negative
+    const angleDeg = ((-car.angle * 180) / Math.PI) % 360;
+    if (angleVal) angleVal.textContent = `${angleDeg.toFixed(1)}°`;
+
+    // 3. Clear the canvas on each frame to redraw objects
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 3. Draw updated elements
+    // 4. Draw updated elements
     road.draw(ctx);
     car.draw(ctx);
 

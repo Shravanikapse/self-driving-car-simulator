@@ -7,10 +7,20 @@ class Car {
         
         // Physics settings
         this.speed = 0;
-        this.acceleration = 0.2;
-        this.maxSpeed = 3;
-        this.friction = 0.05;
+        this.maxSpeed = 5;
         this.angle = 0;
+
+        // Realistic Physics Coefficients
+        this.enginePower = 0.15;       // Forward acceleration force per frame
+        this.reversePower = 0.08;      // Reverse acceleration force per frame
+        this.rollingResistance = 0.03; // Constant tire friction
+        this.dragCoefficient = 0.005;  // Aerodynamic drag coefficient (air resistance)
+
+        // Telemetry state
+        this.currentEngineForce = 0;
+        this.currentFriction = 0;
+        this.currentDrag = 0;
+        this.currentAccel = 0;
 
         // Instantiate controls
         this.controls = new Controls();
@@ -20,43 +30,72 @@ class Car {
      * Update the car's physics and position based on controls
      */
     update() {
-        // 1. Accelerate / Reverse
+        // 1. Calculate Engine Force (Tractive Force)
+        this.currentEngineForce = 0;
         if (this.controls.forward) {
-            this.speed += this.acceleration;
+            // Engine force drops off slightly at high speeds to model RPM/power limitations
+            const speedRatio = Math.abs(this.speed) / this.maxSpeed;
+            this.currentEngineForce = this.enginePower * (1 - speedRatio * 0.35);
         }
         if (this.controls.reverse) {
-            this.speed -= this.acceleration;
+            this.currentEngineForce = -this.reversePower;
         }
 
-        // 2. Cap speed
+        // 2. Calculate Resistance Forces (Friction + Drag)
+        this.currentFriction = 0;
+        this.currentDrag = 0;
+
+        if (this.speed !== 0) {
+            const direction = Math.sign(this.speed);
+            
+            // Rolling resistance opposes direction of travel
+            this.currentFriction = direction * this.rollingResistance;
+            
+            // Drag is proportional to speed squared and opposes direction of travel
+            this.currentDrag = direction * this.dragCoefficient * (this.speed * this.speed);
+        }
+
+        // Total net resistance force
+        const totalResistance = this.currentFriction + this.currentDrag;
+        
+        // Net force (net acceleration, assuming mass = 1)
+        this.currentAccel = this.currentEngineForce - totalResistance;
+
+        // Update velocity (speed)
+        this.speed += this.currentAccel;
+
+        // 3. Stop completely if the speed is extremely low and no controls are pressed
+        // This prevents the car from creeping or sliding back-and-forth indefinitely
+        if (!this.controls.forward && !this.controls.reverse && Math.abs(this.speed) < 0.05) {
+            this.speed = 0;
+            this.currentAccel = 0;
+            this.currentFriction = 0;
+            this.currentDrag = 0;
+        }
+
+        // Cap speed
         if (this.speed > this.maxSpeed) {
             this.speed = this.maxSpeed;
         }
         if (this.speed < -this.maxSpeed / 2) {
-            this.speed = -this.maxSpeed / 2; // reverse speed is slower
+            this.speed = -this.maxSpeed / 2;
         }
 
-        // 3. Apply friction/drag
-        if (this.speed > 0) {
-            this.speed -= this.friction;
-        }
-        if (this.speed < 0) {
-            this.speed += this.friction;
-        }
-
-        // Stop the car completely if speed is smaller than friction
-        if (Math.abs(this.speed) < this.friction) {
-            this.speed = 0;
-        }
-
-        // 4. Steer the car (only if the car is moving)
+        // 4. Steer the car
         if (this.speed !== 0) {
             const flip = this.speed > 0 ? 1 : -1;
+            
+            // Rate of rotation is proportional to speed (Ackerman steering logic)
+            // so steering is naturally inactive when stationary and becomes responsive with speed
+            const turnRate = 0.015 * Math.abs(this.speed);
+            const maxTurnRate = 0.04;
+            const finalTurnRate = Math.min(turnRate, maxTurnRate);
+
             if (this.controls.left) {
-                this.angle += 0.03 * flip;
+                this.angle += finalTurnRate * flip;
             }
             if (this.controls.right) {
-                this.angle -= 0.03 * flip;
+                this.angle -= finalTurnRate * flip;
             }
         }
 
