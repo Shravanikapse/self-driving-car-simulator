@@ -4,7 +4,7 @@ class Car {
         this.y = y;
         this.width = width;
         this.height = height;
-        
+
         // Physics settings
         this.speed = 0;
         this.maxSpeed = 5;
@@ -47,17 +47,17 @@ class Car {
 
         if (this.speed !== 0) {
             const direction = Math.sign(this.speed);
-            
+
             // Rolling resistance opposes direction of travel
             this.currentFriction = direction * this.rollingResistance;
-            
+
             // Drag is proportional to speed squared and opposes direction of travel
             this.currentDrag = direction * this.dragCoefficient * (this.speed * this.speed);
         }
 
         // Total net resistance force
         const totalResistance = this.currentFriction + this.currentDrag;
-        
+
         // Net force (net acceleration, assuming mass = 1)
         this.currentAccel = this.currentEngineForce - totalResistance;
 
@@ -84,7 +84,7 @@ class Car {
         // 4. Steer the car
         if (this.speed !== 0) {
             const flip = this.speed > 0 ? 1 : -1;
-            
+
             // Rate of rotation is proportional to speed (Ackerman steering logic)
             // so steering is naturally inactive when stationary and becomes responsive with speed
             const turnRate = 0.015 * Math.abs(this.speed);
@@ -131,9 +131,9 @@ class Car {
 
         // Rear Right
         ctx.fillStyle = wheelColor;
-        ctx.fillRect(this.width / 2 - wheelW * 2/3, this.height / 4 - wheelH / 2, wheelW, wheelH);
+        ctx.fillRect(this.width / 2 - wheelW * 2 / 3, this.height / 4 - wheelH / 2, wheelW, wheelH);
         ctx.fillStyle = hubColor;
-        ctx.fillRect(this.width / 2 - wheelW * 2/3 + 2, this.height / 4 - wheelH / 2 + 2, wheelW - 4, wheelH - 4);
+        ctx.fillRect(this.width / 2 - wheelW * 2 / 3 + 2, this.height / 4 - wheelH / 2 + 2, wheelW - 4, wheelH - 4);
 
         // Front Wheels (rotate left/right based on steering controls)
         let frontWheelAngle = 0;
@@ -192,7 +192,7 @@ class Car {
         const cabR = this.width * 0.35;
         const cabT = -this.height * 0.15;
         const cabB = this.height * 0.3;
-        
+
         // Cabin structure outline
         ctx.fillStyle = "#1e293b"; // Dark carbon cabin frame
         ctx.beginPath();
@@ -204,7 +204,7 @@ class Car {
         ctx.fill();
 
         // Glass color (translucent bright cyan-blue glow)
-        const glassColor = "rgba(165, 243, 252, 0.85)";
+        const glassColor = "rgba(165, 243, 252, 0.91)";
         ctx.fillStyle = glassColor;
 
         // Curved Windshield (Windscreen)
@@ -232,8 +232,8 @@ class Car {
         ctx.fill();
 
         // 5. Draw Headlights (Bright yellow/white)
-        ctx.fillStyle = "#fef08a";
-        
+        ctx.fillStyle = "#fef08afe";
+
         // Left headlight
         ctx.beginPath();
         if (ctx.roundRect) {
@@ -242,7 +242,7 @@ class Car {
             ctx.rect(-this.width / 2 + 2, -this.height / 2, 5, 4);
         }
         ctx.fill();
-        
+
         // Right headlight
         ctx.beginPath();
         if (ctx.roundRect) {
@@ -256,7 +256,7 @@ class Car {
         // Make them glow brighter when braking (reverse key is pressed or slowing down)
         const isBraking = this.controls.reverse || (this.speed > 0 && this.currentAccel < 0);
         ctx.fillStyle = isBraking ? "#ef4444" : "#991b1b";
-        
+
         // Left taillight
         ctx.fillRect(-this.width / 2 + 2, this.height / 2 - 3, 5, 3);
         // Right taillight
