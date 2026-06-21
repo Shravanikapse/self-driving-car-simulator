@@ -115,18 +115,162 @@ class Car {
         // Rotate the context by the car's angle
         ctx.rotate(-this.angle);
 
-        ctx.fillStyle = "#3b82f6"; // Modern vibrant blue color for the car
-        
+        // 1. Draw Wheels (beneath the body)
+        // Wheels size: width 6px, height 12px
+        const wheelW = 6;
+        const wheelH = 12;
+        const wheelColor = "#1e293b";
+        const hubColor = "#64748b";
+
+        // Rear Wheels (fixed straight)
+        // Rear Left
+        ctx.fillStyle = wheelColor;
+        ctx.fillRect(-this.width / 2 - wheelW / 3, this.height / 4 - wheelH / 2, wheelW, wheelH);
+        ctx.fillStyle = hubColor;
+        ctx.fillRect(-this.width / 2 - wheelW / 3 + 2, this.height / 4 - wheelH / 2 + 2, wheelW - 4, wheelH - 4);
+
+        // Rear Right
+        ctx.fillStyle = wheelColor;
+        ctx.fillRect(this.width / 2 - wheelW * 2/3, this.height / 4 - wheelH / 2, wheelW, wheelH);
+        ctx.fillStyle = hubColor;
+        ctx.fillRect(this.width / 2 - wheelW * 2/3 + 2, this.height / 4 - wheelH / 2 + 2, wheelW - 4, wheelH - 4);
+
+        // Front Wheels (rotate left/right based on steering controls)
+        let frontWheelAngle = 0;
+        if (this.controls.left) {
+            frontWheelAngle = -0.3;
+        } else if (this.controls.right) {
+            frontWheelAngle = 0.3;
+        }
+
+        // Front Left Wheel
+        ctx.save();
+        ctx.translate(-this.width / 2 + wheelW / 2, -this.height / 4);
+        ctx.rotate(frontWheelAngle);
+        ctx.fillStyle = wheelColor;
+        ctx.fillRect(-wheelW / 2, -wheelH / 2, wheelW, wheelH);
+        ctx.fillStyle = hubColor;
+        ctx.fillRect(-wheelW / 2 + 2, -wheelH / 2 + 2, wheelW - 4, wheelH - 4);
+        ctx.restore();
+
+        // Front Right Wheel
+        ctx.save();
+        ctx.translate(this.width / 2 - wheelW / 2, -this.height / 4);
+        ctx.rotate(frontWheelAngle);
+        ctx.fillStyle = wheelColor;
+        ctx.fillRect(-wheelW / 2, -wheelH / 2, wheelW, wheelH);
+        ctx.fillStyle = hubColor;
+        ctx.fillRect(-wheelW / 2 + 2, -wheelH / 2 + 2, wheelW - 4, wheelH - 4);
+        ctx.restore();
+
+        // 2. Draw Car Body (Chassis)
+        ctx.fillStyle = "#3b82f6";    // Vibrant blue
+        ctx.strokeStyle = "#1d4ed8";  // Dark outline
+        ctx.lineWidth = 2;
+
         ctx.beginPath();
-        // Since context is translated to car center, draw centered at (0, 0)
-        ctx.rect(
-            -this.width / 2,
-            -this.height / 2,
-            this.width,
-            this.height
-        );
+        if (ctx.roundRect) {
+            ctx.roundRect(-this.width / 2, -this.height / 2, this.width, this.height, 8);
+        } else {
+            ctx.rect(-this.width / 2, -this.height / 2, this.width, this.height);
+        }
+        ctx.fill();
+        ctx.stroke();
+
+        // 3. Engine Hood detail lines
+        ctx.strokeStyle = "#1d4ed8";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(-this.width / 4, -this.height / 2 + 6);
+        ctx.lineTo(-this.width / 4, -this.height / 4);
+        ctx.lineTo(this.width / 4, -this.height / 4);
+        ctx.lineTo(this.width / 4, -this.height / 2 + 6);
+        ctx.stroke();
+
+        // 4. Draw Cabin & Windows
+        const cabL = -this.width * 0.35;
+        const cabR = this.width * 0.35;
+        const cabT = -this.height * 0.15;
+        const cabB = this.height * 0.3;
+        
+        // Cabin structure outline
+        ctx.fillStyle = "#1e293b"; // Dark carbon cabin frame
+        ctx.beginPath();
+        if (ctx.roundRect) {
+            ctx.roundRect(cabL, cabT, cabR - cabL, cabB - cabT, 4);
+        } else {
+            ctx.rect(cabL, cabT, cabR - cabL, cabB - cabT);
+        }
         ctx.fill();
 
-        ctx.restore(); // Restore context to avoid affecting other drawn objects
+        // Glass color (translucent bright cyan-blue glow)
+        const glassColor = "rgba(165, 243, 252, 0.85)";
+        ctx.fillStyle = glassColor;
+
+        // Curved Windshield (Windscreen)
+        ctx.beginPath();
+        ctx.moveTo(cabL + 1, cabT + 6);
+        ctx.lineTo(cabL + 2.5, cabT + 1);
+        ctx.lineTo(cabR - 2.5, cabT + 1);
+        ctx.lineTo(cabR - 1, cabT + 6);
+        ctx.quadraticCurveTo(0, cabT + 4, cabL + 1, cabT + 6);
+        ctx.fill();
+
+        // Side Windows (Left and Right)
+        // Left side window
+        ctx.fillRect(cabL + 0.5, cabT + 8, 2, 12);
+        // Right side window
+        ctx.fillRect(cabR - 2.5, cabT + 8, 2, 12);
+
+        // Rear Window
+        ctx.beginPath();
+        ctx.moveTo(cabL + 2, cabB - 1);
+        ctx.lineTo(cabR - 2, cabB - 1);
+        ctx.lineTo(cabR - 3.5, cabB - 4);
+        ctx.lineTo(cabL + 3.5, cabB - 4);
+        ctx.closePath();
+        ctx.fill();
+
+        // 5. Draw Headlights (Bright yellow/white)
+        ctx.fillStyle = "#fef08a";
+        
+        // Left headlight
+        ctx.beginPath();
+        if (ctx.roundRect) {
+            ctx.roundRect(-this.width / 2 + 2, -this.height / 2, 5, 4, [2, 2, 0, 0]);
+        } else {
+            ctx.rect(-this.width / 2 + 2, -this.height / 2, 5, 4);
+        }
+        ctx.fill();
+        
+        // Right headlight
+        ctx.beginPath();
+        if (ctx.roundRect) {
+            ctx.roundRect(this.width / 2 - 7, -this.height / 2, 5, 4, [2, 2, 0, 0]);
+        } else {
+            ctx.rect(this.width / 2 - 7, -this.height / 2, 5, 4);
+        }
+        ctx.fill();
+
+        // 6. Draw Taillights (Vibrant red)
+        // Make them glow brighter when braking (reverse key is pressed or slowing down)
+        const isBraking = this.controls.reverse || (this.speed > 0 && this.currentAccel < 0);
+        ctx.fillStyle = isBraking ? "#ef4444" : "#991b1b";
+        
+        // Left taillight
+        ctx.fillRect(-this.width / 2 + 2, this.height / 2 - 3, 5, 3);
+        // Right taillight
+        ctx.fillRect(this.width / 2 - 7, this.height / 2 - 3, 5, 3);
+
+        // 7. Spoiler / Rear Wing
+        ctx.fillStyle = "#1e293b";
+        // Wing main bar
+        ctx.fillRect(-this.width / 2 - 2, this.height / 2 - 1, this.width + 4, 3);
+        // Left wing support mount
+        ctx.fillRect(-this.width / 3, this.height / 2 - 3, 2, 2);
+        // Right wing support mount
+        ctx.fillRect(this.width / 3 - 2, this.height / 2 - 3, 2, 2);
+
+        ctx.restore();
     }
 }
