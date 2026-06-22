@@ -178,7 +178,7 @@ class Car {
         ctx.stroke();
 
         // 3. Engine Hood detail lines
-        ctx.strokeStyle = "#1d4ed8";
+        ctx.strokeStyle = "#174bd9ff";
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(-this.width / 4, -this.height / 2 + 6);
@@ -204,7 +204,7 @@ class Car {
         ctx.fill();
 
         // Glass color (translucent bright cyan-blue glow)
-        const glassColor = "rgba(165, 243, 252, 0.91)";
+        const glassColor = "rgba(165, 243, 252, 0.94)";
         ctx.fillStyle = glassColor;
 
         // Curved Windshield (Windscreen)
