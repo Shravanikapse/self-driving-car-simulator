@@ -6,6 +6,10 @@ class Road {
 
         this.left = x - width / 2;
         this.right = x + width / 2;
+
+        const infinity = 1000000;
+        this.top = -infinity;
+        this.bottom = infinity;
     }
 
     /**
@@ -25,7 +29,7 @@ class Road {
     draw(ctx) {
         // Draw the main road lane pavement (dark gray)
         ctx.fillStyle = "#333333";
-        ctx.fillRect(this.left, 0, this.width, ctx.canvas.height);
+        ctx.fillRect(this.left, this.top, this.width, this.bottom - this.top);
 
         // Set line properties for road borders
         ctx.lineWidth = 4;
@@ -40,8 +44,8 @@ class Road {
             ctx.setLineDash([20, 20]);
 
             ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, ctx.canvas.height);
+            ctx.moveTo(x, this.top);
+            ctx.lineTo(x, this.bottom);
             ctx.stroke();
         }
 
@@ -50,14 +54,14 @@ class Road {
 
         // Draw left road border
         ctx.beginPath();
-        ctx.moveTo(this.left, 0);
-        ctx.lineTo(this.left, ctx.canvas.height);
+        ctx.moveTo(this.left, this.top);
+        ctx.lineTo(this.left, this.bottom);
         ctx.stroke();
 
         // Draw right road border
         ctx.beginPath();
-        ctx.moveTo(this.right, 0);
-        ctx.lineTo(this.right, ctx.canvas.height);
+        ctx.moveTo(this.right, this.top);
+        ctx.lineTo(this.right, this.bottom);
         ctx.stroke();
     }
 }

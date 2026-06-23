@@ -51,9 +51,16 @@ function animate() {
     // 3. Clear the canvas on each frame to redraw objects
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 4. Draw updated elements
+    // 4. Save canvas state and translate vertically to keep the camera focused on the car
+    ctx.save();
+    ctx.translate(0, -car.y + canvas.height * 0.7);
+
+    // 5. Draw updated elements
     road.draw(ctx);
     car.draw(ctx);
+
+    // Restore canvas state to prevent translation compounding in the next frame
+    ctx.restore();
 
     // Request the next animation frame
     requestAnimationFrame(animate);
