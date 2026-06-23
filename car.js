@@ -263,7 +263,7 @@ class Car {
         ctx.fillRect(this.width / 2 - 7, this.height / 2 - 3, 5, 3);
 
         // 7. Spoiler / Rear Wing
-        ctx.fillStyle = "#1e293b";
+        ctx.fillStyle = "#1e293bff";
         // Wing main bar
         ctx.fillRect(-this.width / 2 - 2, this.height / 2 - 1, this.width + 4, 3);
         // Left wing support mount
