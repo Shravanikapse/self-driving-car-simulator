@@ -11,11 +11,11 @@ const ctx = canvas.getContext("2d");
 
 // 2. Configure canvas dimensions
 // Typically, vertical-scrolling driving games use a narrower portrait viewport
-canvas.width = 200;
+canvas.width = 280;
 canvas.height = 400;
 
-// Initialize the road at the center of the canvas with a width of 150px
-const road = new Road(canvas.width / 2, 200);
+// Initialize the road at the center of the canvas with a width of 180px, leaving 50px grass on each side
+const road = new Road(canvas.width / 2, 180);
 
 // Initialize the car centered on the road horizontally (canvas.width / 2)
 // and positioned near the bottom vertically (300px), with a width of 30px and height of 50px
@@ -56,7 +56,7 @@ function animate() {
     ctx.translate(0, -car.y + canvas.height * 0.7);
 
     // 5. Draw updated elements
-    road.draw(ctx);
+    road.draw(ctx, car.y);
     car.draw(ctx);
 
     // Restore canvas state to prevent translation compounding in the next frame
